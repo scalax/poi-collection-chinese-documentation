@@ -64,7 +64,7 @@ poi-collection 已经提供了 CellReader 类型的 MonadError ，可自行扩�
 
 poi-collection 的写入依然使用了 Type Class 风格的封装。
 这个写入封装可以在尽量保持 Scala 代码风格的同时减少 CellStyle 的产生。
-以避免遇到 HSSFWorkbook 4000 个 CellStyle 上限的问题。
+以避免遇到 HSSFWorkbook 4000 个 CellStyle 数量上限的问题。
 如下则可建立一个 CellData：
 ```scala
 case object TextStyle extends StyleTransform {
