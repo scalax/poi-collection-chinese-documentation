@@ -50,3 +50,12 @@ tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue
 | NumbericCell(-123.321) | "-123.321"(CellType to STRING) | -123.321 | ExpectBooleanCellException | ExpectDateException | ExpectStringCellException | "-123.321"(CellType to STRING) | "-123.321"(CellType to STRING) |
 | BooleanCell(true) | ExpectStringCellException | ExpectNumericCellException | true | ExpectDateException | ExpectStringCellException | ExpectStringCellException | ExpectStringCellException |
 | BooleanCell(false) | ExpectStringCellException | ExpectNumericCellException | false | ExpectDateException | ExpectStringCellException | ExpectStringCellException | ExpectStringCellException |
+
+上述 Reader 都已扩展了 Option[T] 类型的 Reader。如已经 import 了 String reader，则可使用 tryValue[Option[String]]。
+Option 类的 Reader 将只把 CellNotExistsException 转化为 None，把正常返回值转化为 Option(value)，不会转化其他异常。
+
+如需转化其他异常或者需要提供其他类型的 Reader，只需
+```scala
+import cats.implicits._
+```
+poi-collection 已经提供了 CellReader 类型的 MonadError ，可自行扩展该 Reader。
