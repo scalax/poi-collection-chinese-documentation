@@ -40,7 +40,7 @@ CPoiUtils.wrapCell(Option(cell))
 tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue 的具体行为列表：
 
 | POI Cell | String reader | Double reader | Boolean reader | Date reader | Mutable string reader | Non blank string reader | Non empty string reader |
-|-------|-------|-------|-------|-------|-------|-------|
+|-------|-------|-------|-------|-------|-------|-------|-------|
 | null | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | 待定 | 待定 | 待定 |
 | Blank Cell | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | 待定 | 待定 | 待定 |
 | StringCell("-123") | "-123" | ExcepectNumericCellException | ExcepectBooleanCellException | ExcepectDateException | 待定 | 待定 | 待定 |
