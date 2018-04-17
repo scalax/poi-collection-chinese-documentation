@@ -104,7 +104,7 @@ val cells = List(
 
 2、不要使用 workbook 创建 cellStyle，只需改变原 cellStyle 即可。
 
-然后使用一下代码产生副作用作用于 Workbook 即可：
+然后使用以下代码产生副作用作用于 Workbook 即可：
 ```scala
 val gen = StyleGen.getInstance
 CPoiUtils.multiplySet(gen, cells): StyleGen
