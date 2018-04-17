@@ -44,8 +44,8 @@ tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue
 | null | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | ""(empty string) | CellNotExistsException | CellNotExistsException |
 | Blank Cell | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | ""(empty string) | CellNotExistsException | CellNotExistsException |
 | StringCell(""(empty string)) | ""(empty string) | ExpectNumericCellException | ExpectBooleanCellException | ExpectDateException | ""(empty string) | CellNotExistsException | CellNotExistsException |
-| StringCell("    ") | "    " | ExpectNumericCellException | ExpectBooleanCellException | ExpectDateException | "    " | "    " | CellNotExistsException |
-| StringCell("-123        ") | "-123        " | ExpectNumericCellException | ExpectBooleanCellException | ExpectDateException | "-123        " | "-123        " | "-123" |
+| StringCell("&nbsp;&nbsp;&nbsp;&nbsp;") | "&nbsp;&nbsp;&nbsp;&nbsp;" | ExpectNumericCellException | ExpectBooleanCellException | ExpectDateException | "&nbsp;&nbsp;&nbsp;&nbsp;" | "&nbsp;&nbsp;&nbsp;&nbsp;" | CellNotExistsException |
+| StringCell("-123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") | "-123&nbsp;&nbsp;&nbsp;&nbsp;" | ExpectNumericCellException | ExpectBooleanCellException | ExpectDateException | "-123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" | "-123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" | "-123" |
 | NumbericCell(123.321) | "123.321" | 123.321 | ExpectBooleanCellException | Date(-2198535808600L) | ExpectStringCellException | "123.321" | "123.321" |
 | NumbericCell(-123.321) | "-123.321" | -123.321 | ExpectBooleanCellException | ExpectDateException | "-123.321" | "-123.321" | "-123.321" |
 | BooleanCell(true) | ExpectStringCellException | ExpectNumericCellException | true | ExpectDateException | ExpectStringCellException | ExpectStringCellException | ExpectStringCellException |
