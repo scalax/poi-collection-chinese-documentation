@@ -117,7 +117,7 @@ CPoiUtils.multiplySet 的返回值是一个新的 StyleGen，拥有设值过程�
 val gen = MutableStyleGen.getInstance
 CPoiUtils.multiplySet(gen, cells): Unit
 ```
-第一句定义的 gen 可以重复使用在同一个 Workbook 的设值操作中以充分利用 CellStyle 缓存。
+第一句定义的 gen 可以重复使用在同一个 workbook 的设值操作中以充分利用 CellStyle 缓存。
 
 注意：MutableStyleGen 不是线程安全的，但并不影响最终效果。MutableStyleGen 只是为了缩减大量因为使用了 case class
 声明方式而导致的重复 CellStyle，并发有可能会造成 CellStyle 数量的增加但并不会造成 CellStyle 数量的暴涨。
