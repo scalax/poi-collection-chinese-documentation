@@ -25,7 +25,7 @@ val row = sheet.getRow(2)
 val cell1 = row.getCell(4)
 val result1: Either[CellReaderException, String] = CPoiUtils.wrapCell(cell1).tryValue[String] //Right("Test")
 val cell2 = row.getCell(5) //Boolean Cell
-val result2: Either[CellReaderException, String] = CPoiUtils.wrapCell(cell2).tryValue[String] //Left(ExcepectStringCellException)
+val result2: Either[CellReaderException, String] = CPoiUtils.wrapCell(cell2).tryValue[String] //Left(ExpectStringCellException)
 val cell3 = row.getCell(6) //null
 val result3: Either[CellReaderException, String] = CPoiUtils.wrapCell(cell3).tryValue[Option[Double]] //Right(None)
 ```
@@ -39,13 +39,14 @@ CPoiUtils.wrapCell(Option(cell))
 
 tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue 的具体行为列表：
 
-| POI Cell | String reader | Double reader | Boolean reader | Date reader | Mutable string reader | Non blank string reader | Non empty string reader |
+| POI Cell | String reader | Double reader | Boolean reader | Date reader | Mutable string reader | Non empty string reader | Non blank string reader |
 |-------|-------|-------|-------|-------|-------|-------|-------|
-| null | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | 待定 | 待定 | 待定 |
-| Blank Cell | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | 待定 | 待定 | 待定 |
-| StringCell("-123") | "-123" | ExcepectNumericCellException | ExcepectBooleanCellException | ExcepectDateException | 待定 | 待定 | 待定 |
-| StringCell("") | ""(empty string) | ExcepectNumericCellException | ExcepectBooleanCellException | ExcepectDateException | 待定 | 待定 | 待定 |
-| NumbericCell(123.321) | "123.321" | 123.321 | ExcepectBooleanCellException | 待定 | 待定 | 待定 | 待定 |
-| NumbericCell(-123.321) | 待定 | -123.321 | ExcepectBooleanCellException | 待定 | 待定 | 待定 | 待定 |
-| BooleanCell(true) | ExcepectStringCellException | ExcepectNumericCellException | true | ExcepectDateException | 待定 | 待定 | 待定 |
-| BooleanCell(false) | ExcepectStringCellException | ExcepectNumericCellException | false | ExcepectDateException | 待定 | 待定 | 待定 |
+| null | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | ""(empty string) | CellNotExistsException | CellNotExistsException |
+| Blank Cell | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | ""(empty string) | CellNotExistsException | CellNotExistsException |
+| StringCell(""(empty string)) | ""(empty string) | ExpectNumericCellException | ExpectBooleanCellException | ExpectDateException | ""(empty string) | CellNotExistsException | CellNotExistsException |
+| StringCell("    ") | "    " | ExpectNumericCellException | ExpectBooleanCellException | ExpectDateException | "    " | "    " | CellNotExistsException |
+| StringCell("-123        ") | "-123        " | ExpectNumericCellException | ExpectBooleanCellException | ExpectDateException | "-123        " | "-123        " | "-123" |
+| NumbericCell(123.321) | "123.321" | 123.321 | ExpectBooleanCellException | Date(-2198535808600L) | ExpectStringCellException | "123.321" | "123.321" |
+| NumbericCell(-123.321) | "-123.321" | -123.321 | ExpectBooleanCellException | ExpectDateException | "-123.321" | "-123.321" | "-123.321" |
+| BooleanCell(true) | ExpectStringCellException | ExpectNumericCellException | true | ExpectDateException | ExpectStringCellException | ExpectStringCellException | ExpectStringCellException |
+| BooleanCell(false) | ExpectStringCellException | ExpectNumericCellException | false | ExpectDateException | ExpectStringCellException | ExpectStringCellException | ExpectStringCellException |
