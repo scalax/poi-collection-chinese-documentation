@@ -102,7 +102,7 @@ val cells = List(
 注意：1、所有继承自 StyleTransform 的 class 和 object 都必须为 case class 或 case object 以便更好地分辨重复的 CellStyle
 处理链条。
 
-2、不要使用 workbook 创建 CellStyle，只需改变原 cellStyle 即可。
+2、不要使用 workbook 创建 cellStyle，只需改变原 cellStyle 即可。
 
 然后使用一下代码产生副作用作用于 Workbook 即可：
 ```scala
