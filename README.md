@@ -55,20 +55,20 @@ tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue
 * 对于 null 和 Blank Cell，使用 String Reader 将解析为空字符串，使用 Double Reader、Boolean Reader、Date Reader
 将解析为 CellNotExistsException，这可能与 Apache POI 的默认行为有小许差异。
 * 只有在 Numberic Cell 在使用 String Reader 解析的时候需要改变 CellType，使用 Immutable String Reader 解析可以避免这个问题，但将无法获取到
-Numberic Cell 的内容。使用 Immutable String Reader 对于有其他 Formula Cell 依赖这个 Cell 来计算结果的时候可以避免错误的发生。
+Numberic Cell 的内容。如果有其他 Formula Cell 依赖这个 Cell 来计算结果，使用 Immutable String Reader 可以避免 Cell 类型的改变。
 * Non Empty String Reader 是在 String Reader 的基础上把所有的空字符串视为 CellNotExistsException。
-* Non Blank String Reader 是把 String Reader 解析到的字符串进行 trim 操作后依据 Non Empty String Reader 的行为继续解析。也就是说把只有空格的字符串也视为 CellNotExistsException。
-* Formula Cell 将会先进行计算再使用对应的 Reader 进行解析，解析过程将会改变 Cell 的状态。
-* 依据上面所描述的情况，在读取的过程中 Cell 的状态（包括 CellType 和 Value）将会发生改变，应避免再使用此 Workbook 进行其他写入操作。
+* Non Blank String Reader 会把由 String Reader 解析到的字符串进行 trim 操作，然后依据 Non Empty String Reader 的行为继续解析。也就是说把只有空格的字符串也解析为 CellNotExistsException。
+* Formula Cell 将会先对 Cell 进行计算，然后使用对应的 Reader 进行解析，解析过程会改变 Cell 的状态。
+* 根据上面所描述的情况，在读取的过程中 Cell 的状态（包括 CellType 和 Value）将会发生改变，应避免再使用此 Workbook 进行其他操作。
 
-上述 Reader 都已扩展了 Option[T] 类型的 Reader。如已经 import 了 String reader，则可使用 tryValue[Option[String]]。
+上述 Reader 都已扩展了 Option[T] 类型的 Reader。如已经 import 了 String reader，则可使用 tryValue[Option[String]] 进行解析。
 Option 类的 Reader 将只把 CellNotExistsException 转化为 None，把正常返回值转化为 Option(value)，不会转化其他异常。
 
 如需转化其他异常或者需要提供其他类型的 Reader，只需
 ```scala
 import cats.implicits._
 ```
-poi-collection 已经提供了 CellReader 类型的 MonadError，可自行扩展该 Reader。
+poi-collection 已经提供了 MonadError[CellReader]，可自行扩展该 Reader。
 
 ### 写入
 
