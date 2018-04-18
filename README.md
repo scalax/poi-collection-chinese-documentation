@@ -73,8 +73,8 @@ poi-collection 已经提供了 CellReader 类型的 MonadError ，可自行扩�
 ### 写入
 
 poi-collection 的写入依然使用了 Type Class 风格的封装。
-这个写入封装可以在尽量保持 Scala 代码风格的同时减少 cellStyle 的产生。
-以避免遇到 HSSFWorkbook 4000 个 cellStyle 数量上限的问题。
+这个写入封装可以在尽量保持 Scala 代码风格的同时减少 CellStyle 的产生。
+以避免遇到 HSSFWorkbook 4000 个 CellStyle 数量上限的问题。
 如下则可建立一个 CellData：
 ```scala
 case object TextStyle extends StyleTransform {
@@ -109,25 +109,26 @@ val cells = List(
   cell2 -> CellData(testDouble).addTransform(DoubleStyle, Locked(true))
 )
 ```
-注意：1、所有继承自 StyleTransform 的 class 和 object 都必须为 case class 或 case object 以便更好地分辨重复的 cellStyle
+注意：1、所有继承自 StyleTransform 的 class 和 object 都必须为 case class 或 case object 以便更好地分辨重复的 CellStyle
 处理链条。
 
-2、不要使用 workbook 创建 cellStyle，只需改变原 cellStyle 即可。
+2、不要使用参数中的 Workbook 创建 CellStyle，只需改变原 CellStyle 即可，Workbook 可用于创建 DataFormat 等对象。
 
 然后使用以下代码产生副作用作用于 Workbook 即可：
 ```scala
 val gen = StyleGen.getInstance
 CPoiUtils.multiplySet(gen, cells): StyleGen
 ```
-CPoiUtils.multiplySet 的返回值是一个新的 styleGen，拥有设值过程中产生的 cellStyle 缓存，如果在一组设值操作中有多段设值代码，
-可以继续使用 CPoiUtils.multiplySet 的返回值作为下一个 CPoiUtils.multiplySet 的 gen 参数以继续使用之前的 cellStyle 缓存。
+CPoiUtils.multiplySet 的返回值是一个新的 StyleGen，拥有设值过程中产生的 CellStyle 缓存，如果在一组设值操作中有多段设值代码，
+可以继续使用 CPoiUtils.multiplySet 的返回值作为下一个 CPoiUtils.multiplySet 的 gen 参数以继续使用之前的 CellStyle 缓存。
 
 如果对性能比较敏感，可以使用以下方法产生副作用，下面的方法将会使用 mutable.Map 来记录 cellStyle 处理链的缓存。
 ```scala
 val gen = MutableStyleGen.getInstance
 CPoiUtils.multiplySet(gen, cells): Unit
 ```
-第一句定义的 gen 可以重复使用在同一个 workbook 的设值操作中以充分利用 cellStyle 缓存。
+第一句定义的 gen 可以重复使用在同一个 Workbook 的设值操作中以充分利用 Cell Style 缓存。
 
-注意：MutableStyleGen 不是线程安全的，但并不影响最终效果。MutableStyleGen 只是为了缩减大量因为使用了 case class
-声明方式而导致的重复 cellStyle，并发有可能会造成 cellStyle 数量的增加但并不会造成 cellStyle 数量的暴涨。
+注意：MutableStyleGen 不是线程安全的，但并不影响最终效果。MutableStyleGen
+只是为了缩减大量因为使用了不变对象声明方式而导致的重复 CellStyle，并发有可能会造成
+CellStyle 数量的增加但并不会造成 CellStyle 数量的暴涨。
