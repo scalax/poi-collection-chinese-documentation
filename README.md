@@ -58,6 +58,8 @@ tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue
 Numberic Cell 的内容，这在有其他 Formula Cell 依赖这个 Cell 来计算的时候非常有用。
 * Non Empty String Reader 是在 String Reader 的基础上把所有的空字符串视为 CellNotExistsException。
 * Non Blank String Reader 是把 String Reader 解析到的字符串进行 trim 操作后依据 Non Empty String Reader 的行为继续解析。也就是说把只有空格的字符串也视为 CellNotExistsException。
+* Formula Cell 将会先进行计算再使用对应的 Reader 进行解析，解析过程将会改变 Cell 的状态。
+* 依据上面所描述的情况，在读取的过程中 Cell 的状态（包括 Cell Type 和 Value）将会发生改变，所以应该避免再使用此 Workbook 进行其他写入操作。
 
 上述 Reader 都已扩展了 Option[T] 类型的 Reader。如已经 import 了 String reader，则可使用 tryValue[Option[String]]。
 Option 类的 Reader 将只把 CellNotExistsException 转化为 None，把正常返回值转化为 Option(value)，不会转化其他异常。
