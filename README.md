@@ -73,8 +73,8 @@ poi-collection 已经实现了一个 MonadError[CellReader]，可自行对 CellR
 ### 写入
 
 poi-collection 的写入依然使用了 Type Class 风格的封装。
-这个写入封装可以在尽量保持 Scala 代码风格的同时减少 CellStyle 的产生，
-可以避免遇到 HSSFWorkbook CellStyle 数量不能超过 4000 的问题。
+这个写入封装在尽量保持 Scala 代码风格的同时减少了 CellStyle 的产生，
+亦可避免遇到 HSSFWorkbook CellStyle 数量不能超过 4000 的问题。
 如下则可建立一个 CellData：
 ```scala
 case object TextStyle extends StyleTransform {
