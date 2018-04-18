@@ -64,11 +64,11 @@ Numberic Cell 的内容。如果有其他 Formula Cell 依赖这个 Cell 来计�
 上述 Reader 都已扩展了 Option[T] 类型的 Reader。如已经 import 了 String reader，则可使用 tryValue[Option[String]] 进行解析。
 Option 类的 Reader 将只把 CellNotExistsException 转化为 None，把正常返回值转化为 Option(value)，不会转化其他异常。
 
-如需转化其他异常或者需要提供其他类型的 Reader，只需
+如需转化其他异常或者需要提供其他类型的 CellReader，只需
 ```scala
 import cats.implicits._
 ```
-poi-collection 已经实现了一个 MonadError[CellReader]，可自行对 Reader 进行扩展。
+poi-collection 已经实现了一个 MonadError[CellReader]，可自行对 CellReader 进行扩展。
 
 ### 写入
 
@@ -113,6 +113,8 @@ val cells = List(
 * 所有继承自 StyleTransform 的 class 和 object 都必须为 case class 或 case object，这样可以更好地分辨重复的 CellStyle
 处理链条。
 * 不要使用参数中的 Workbook 创建 CellStyle，只需改参数中的 CellStyle 即可，但 Workbook 可用于创建 DataFormat 等对象。
+* poi-collection 已经实现了一个 Contravariant[CellWriter]，import cats 的相关隐式转换后可以使用 contramap
+扩展更多类型的 CellWriter。
 
 然后使用以下代码产生副作用写入至 Workbook 即可：
 ```scala
