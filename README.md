@@ -39,7 +39,7 @@ CPoiUtils.wrapCell(Option(cell))
 
 tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue 的具体行为列表：
 
-| POI Cell | String reader | Double reader | Boolean reader | Date reader | Immutable string reader | Non empty string reader | Non blank string reader |
+| POI Cell | String Reader | Double Reader | Boolean Reader | Date Reader | Immutable String Reader | Non Empty String Reader | Non Blank String Reader |
 |-------|-------|-------|-------|-------|-------|-------|-------|
 | null | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | ""(empty string) | CellNotExistsException | CellNotExistsException |
 | Blank Cell | ""(empty string) | CellNotExistsException | CellNotExistsException | CellNotExistsException | ""(empty string) | CellNotExistsException | CellNotExistsException |
@@ -50,6 +50,14 @@ tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue
 | NumbericCell(-123.321) | "-123.321"(CellType to STRING) | -123.321 | ExpectBooleanCellException | ExpectDateException | ExpectStringCellException | "-123.321"(CellType to STRING) | "-123.321"(CellType to STRING) |
 | BooleanCell(true) | ExpectStringCellException | ExpectNumericCellException | true | ExpectDateException | ExpectStringCellException | ExpectStringCellException | ExpectStringCellException |
 | BooleanCell(false) | ExpectStringCellException | ExpectNumericCellException | false | ExpectDateException | ExpectStringCellException | ExpectStringCellException | ExpectStringCellException |
+
+这个表有几个要点：
+* null 和 Blank Cell 使用 String Reader 将解析为空字符串，使用 Double Reader、Boolean Reader、Date Reader
+将解析为 CellNotExistsException。
+* 只有在 Numberic Cell 在使用 String Reader 解析的时候需要改变 Cell Type，使用 Immutable String Reader 解析可以避免这个问题，但无法获取
+Numberic Cell 的内容，这可以避免因为改变了 Cell Type 而导致某些情况下 Formula Cell 的计算产生了异常的结果。
+* Non Empty String Reader 是在 String Reader 的基础上把所有的空字符串视为 CellNotExistsException。
+* Non Blank String Reader 是把 String Reader 解析到的字符串进行 trim 操作后依据 Non Empty String Reader 的行为继续解析。也就是说把只有空格的字符串也视为 CellNotExistsException。
 
 上述 Reader 都已扩展了 Option[T] 类型的 Reader。如已经 import 了 String reader，则可使用 tryValue[Option[String]]。
 Option 类的 Reader 将只把 CellNotExistsException 转化为 None，把正常返回值转化为 Option(value)，不会转化其他异常。
