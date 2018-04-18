@@ -1,7 +1,7 @@
 # poi-collection 中文文档
 
 [poi-collection](https://github.com/scalax/poi-collection) 是 Apache POI
-Excel 部分一个轻量级的封装。仅提供一些基础的 Scala 风格的 POI Excel API 封装。
+Excel 部分 API 的一个轻量级封装，仅提供一些基础的 Scala 风格的 POI Excel API 封装。
 
 ## 关注点
 
