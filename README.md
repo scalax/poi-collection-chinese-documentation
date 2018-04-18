@@ -113,7 +113,7 @@ val cells = List(
 * 所有继承自 StyleTransform 的 class 和 object 都必须为 case class 或 case object，这样可以更好地分辨重复的 CellStyle
 处理链条。
 * 不要使用参数中的 Workbook 创建 CellStyle，只需改参数中的 CellStyle 即可，但 Workbook 可用于创建 DataFormat 等对象。
-* poi-collection 已经实现了一个 Contravariant[CellWriter]。导入 cats 的相关隐式转换后可以使用 contramap
+* poi-collection 已经实现了一个 Contravariant[CellWriter]，导入 cats 的相关隐式转换后可以使用 contramap
 方法扩展更多类型的 CellWriter。
 
 然后使用以下代码产生副作用写入至 Workbook 即可：
