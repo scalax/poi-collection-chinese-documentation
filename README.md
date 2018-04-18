@@ -55,7 +55,7 @@ tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue
 * null 和 Blank Cell 使用 String Reader 将解析为空字符串，使用 Double Reader、Boolean Reader、Date Reader
 将解析为 CellNotExistsException。
 * 只有在 Numberic Cell 在使用 String Reader 解析的时候需要改变 Cell Type，使用 Immutable String Reader 解析可以避免这个问题，但无法获取
-Numberic Cell 的内容，这可以避免因为改变了 Cell Type 而导致某些情况下 Formula Cell 的计算产生了异常的结果。
+Numberic Cell 的内容，这在有其他 Formula Cell 依赖这个 Cell 来计算的时候非常有用。
 * Non Empty String Reader 是在 String Reader 的基础上把所有的空字符串视为 CellNotExistsException。
 * Non Blank String Reader 是把 String Reader 解析到的字符串进行 trim 操作后依据 Non Empty String Reader 的行为继续解析。也就是说把只有空格的字符串也视为 CellNotExistsException。
 
