@@ -68,7 +68,7 @@ Option 类的 Reader 将只把 CellNotExistsException 转化为 None，把正常
 ```scala
 import cats.implicits._
 ```
-poi-collection 已经提供了 CellReader 类型的 MonadError ，可自行扩展该 Reader。
+poi-collection 已经提供了 CellReader 类型的 MonadError，可自行扩展该 Reader。
 
 ### 写入
 
@@ -122,12 +122,12 @@ CPoiUtils.multiplySet(gen, cells): StyleGen
 CPoiUtils.multiplySet 的返回值是一个新的 StyleGen，拥有设值过程中产生的 CellStyle 缓存，如果在一组设值操作中有多段设值代码，
 可以继续使用 CPoiUtils.multiplySet 的返回值作为下一个 CPoiUtils.multiplySet 的 gen 参数以继续使用之前的 CellStyle 缓存。
 
-如果对性能比较敏感，可以使用以下方法产生副作用，下面的方法将会使用 mutable.Map 来记录 cellStyle 处理链的缓存。
+如果对性能比较敏感，可以使用以下方法产生副作用，下面的方法将会使用 mutable.Map 来记录 CellStyle 处理链的缓存。
 ```scala
 val gen = MutableStyleGen.getInstance
 CPoiUtils.multiplySet(gen, cells): Unit
 ```
-第一句定义的 gen 可以重复使用在同一个 Workbook 的设值操作中以充分利用 Cell Style 缓存。
+第一句定义的 gen 可以重复使用在同一个 Workbook 的设值操作中以充分利用 CellStyle 缓存。
 
 注意：MutableStyleGen 不是线程安全的，但并不影响最终效果。MutableStyleGen
 只是为了缩减大量因为使用了不变对象声明方式而导致的重复 CellStyle，并发有可能会造成
