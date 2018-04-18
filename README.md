@@ -109,10 +109,10 @@ val cells = List(
   cell2 -> CellData(testDouble).addTransform(DoubleStyle, Locked(true))
 )
 ```
-注意：1、所有继承自 StyleTransform 的 class 和 object 都必须为 case class 或 case object 以便更好地分辨重复的 CellStyle
+注意：
+* 所有继承自 StyleTransform 的 class 和 object 都必须为 case class 或 case object 以便更好地分辨重复的 CellStyle
 处理链条。
-
-2、不要使用参数中的 Workbook 创建 CellStyle，只需改变原 CellStyle 即可，Workbook 可用于创建 DataFormat 等对象。
+* 不要使用参数中的 Workbook 创建 CellStyle，只需改变原 CellStyle 即可，Workbook 可用于创建 DataFormat 等对象。
 
 然后使用以下代码产生副作用作用于 Workbook 即可：
 ```scala
