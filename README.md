@@ -105,8 +105,8 @@ case class Locked(lock: Boolean) extends StyleTransform {
   
 import writers._
 val cells = List(
-  cell1 -> CellData(testUTF8Str).addTransform(TextStyle, Locked(false)),
-  cell2 -> CellData(testDouble).addTransform(DoubleStyle, Locked(true))
+  cell1 -> CPoiUtils.wrapData(testUTF8Str).addTransform(TextStyle, Locked(false)),
+  cell2 -> CPoiUtils.wrapData(testDouble).addTransform(DoubleStyle, Locked(true))
 )
 ```
 注意：
