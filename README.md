@@ -77,6 +77,8 @@ poi-collection 的写入依然使用了 Type Class 风格的封装。
 亦可避免遇到 HSSFWorkbook CellStyle 数量不能超过 4000 的问题。
 如下则可建立一个 CellData：
 ```scala
+import net.scalax.cpoi._
+
 case object TextStyle extends StyleTransform {
   override def operation(workbook: Workbook,
                        cellStyle: CellStyle): CellStyle = {
@@ -112,14 +114,14 @@ val cells = List(
 注意：
 * 所有继承自 StyleTransform 的 class 和 object 都必须为 case class 或 case object，这样可以更好地分辨重复的 CellStyle
 处理链条。
-* 不要使用参数中的 Workbook 创建 CellStyle，只需改参数中的 CellStyle 即可，但 Workbook 可用于创建 DataFormat 等对象。
+* 不要使用参数中的 workbook 创建 CellStyle，只需改参数中的 CellStyle 即可，workbook 一般用于创建 DataFormat 等实例。
 * poi-collection 已经实现了一个 Contravariant[CellWriter]，导入 cats 的相关隐式转换后可以使用 contramap
 方法扩展更多类型的 CellWriter。
 
 然后使用以下代码产生副作用写入至 Workbook 即可：
 ```scala
-val gen = StyleGen.getInstance
-CPoiUtils.multiplySet(gen, cells): StyleGen
+val gen = CPoiUtils.newStyleGen
+CPoiUtils.multiplySet(gen, cells): Try[StyleGen]
 ```
 CPoiUtils.multiplySet 的返回值是一个新的 StyleGen，拥有设值过程中产生的 CellStyle 缓存，如果在一组设值操作中有多段设值代码，
 为了充分使用上一个设值操作的 CellStyle 缓存，可以继续使用
@@ -127,8 +129,8 @@ CPoiUtils.multiplySet 的返回值作为下一个 CPoiUtils.multiplySet 的 gen 
 
 在性能敏感的场合，可以使用以下方法进行设值操作，MutableStyleGen 将会使用 mutable.Map 来记录 CellStyle 处理链的缓存。
 ```scala
-val gen = MutableStyleGen.getInstance
-CPoiUtils.multiplySet(gen, cells): Unit
+val gen = CPoiUtils.newMutableStyleGen
+CPoiUtils.multiplySet(gen, cells): Try[CPoiDone]
 ```
 第一句定义的 gen 可以重复使用在同一个 Workbook 的设值操作中以充分利用 CellStyle 缓存。
 
