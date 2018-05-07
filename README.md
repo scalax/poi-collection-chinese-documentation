@@ -134,5 +134,7 @@ CPoiUtils.multiplySet(gen, cells): Try[CPoiDone]
 ```
 第一句定义的 gen 可以重复使用在同一个 Workbook 的设值操作中以充分利用 CellStyle 缓存。
 
-注意：MutableStyleGen 不是线程安全的，但并不影响最终效果。MutableStyleGen
+注意：
+* MutableStyleGen 不是线程安全的，但并不影响最终效果。MutableStyleGen
 只是为了缩减大量重复的 CellStyle，并发有可能会造成 CellStyle 数量的少量增加，但并不会造成 CellStyle 数量的暴涨。
+* 无论使用 StyleGen 还是 MutableStyleGen，如果设值过程中遇到异常，将不会继续执行后续 Poi Cell 的设值操作而是立刻返回 Failure(e)。
