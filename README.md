@@ -14,7 +14,7 @@ poi-collection 主要为了解决以下两个问题：
 ### 读取
 
 ```scala
-import net.scalax.cpoi._
+import net.scalax.cpoi.api._
 import readers._
 
 val file = new File("filePath")
@@ -77,7 +77,7 @@ poi-collection 的写入依然使用了 Type Class 风格的封装。
 亦可避免遇到 HSSFWorkbook CellStyle 数量不能超过 4000 的问题。
 如下则可建立一个 CellData：
 ```scala
-import net.scalax.cpoi._
+import net.scalax.cpoi.api._
 
 case object TextStyle extends StyleTransform {
   override def operation(workbook: Workbook,
