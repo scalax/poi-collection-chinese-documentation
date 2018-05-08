@@ -23,18 +23,18 @@ val workbook = new HSSFWorkbook(outputStream)
 val sheet = workbook.getSheet("Sheet1")
 val row = sheet.getRow(2)
 val cell1 = row.getCell(4)
-val result1: Either[CellReaderException, String] = CPoiUtils.wrapCell(cell1).tryValue[String] //Right("Test")
+val result1: Either[CellReaderException, String] = CPoi.wrapCell(cell1).tryValue[String] //Right("Test")
 val cell2 = row.getCell(5) //Boolean Cell
-val result2: Either[CellReaderException, String] = CPoiUtils.wrapCell(cell2).tryValue[String] //Left(ExpectStringCellException)
+val result2: Either[CellReaderException, String] = CPoi.wrapCell(cell2).tryValue[String] //Left(ExpectStringCellException)
 val cell3 = row.getCell(6) //null
-val result3: Either[CellReaderException, String] = CPoiUtils.wrapCell(cell3).tryValue[Option[Double]] //Right(None)
+val result3: Either[CellReaderException, String] = CPoi.wrapCell(cell3).tryValue[Option[Double]] //Right(None)
 ```
 
 CPoiUtils.wrapCell 的使用方法如下：
 ```scala
-CPoiUtils.wrapCell(cell)
-CPoiUtils.wrapCell(null: Cell)
-CPoiUtils.wrapCell(Option(cell))
+CPoi.wrapCell(cell)
+CPoi.wrapCell(null: Cell)
+CPoi.wrapCell(Option(cell))
 ```
 
 tryValue 的行为可能与 POI 的默认行为有些差异，以下为 tryValue 的具体行为列表：
@@ -107,8 +107,8 @@ case class Locked(lock: Boolean) extends StyleTransform {
   
 import writers._
 val cells = List(
-  cell1 -> CPoiUtils.wrapData(testUTF8Str).addTransform(TextStyle, Locked(false)),
-  cell2 -> CPoiUtils.wrapData(testDouble).addTransform(DoubleStyle, Locked(true))
+  cell1 -> CPoi.wrapData(testUTF8Str).addTransform(TextStyle, Locked(false)),
+  cell2 -> CPoi.wrapData(testDouble).addTransform(DoubleStyle, Locked(true))
 )
 ```
 注意：
@@ -121,7 +121,7 @@ val cells = List(
 然后使用以下代码产生副作用写入至 Workbook 即可：
 ```scala
 val gen = CPoiUtils.newStyleGen
-CPoiUtils.multiplySet(gen, cells): Try[StyleGen]
+CPoi.multiplySet(gen, cells): Try[StyleGen]
 ```
 CPoiUtils.multiplySet 的返回值是一个新的 StyleGen，拥有设值过程中产生的 CellStyle 缓存，如果在一组设值操作中有多段设值代码，
 为了充分使用上一个设值操作的 CellStyle 缓存，可以继续使用
@@ -130,7 +130,7 @@ CPoiUtils.multiplySet 的返回值作为下一个 CPoiUtils.multiplySet 的 gen 
 在性能敏感的场合，可以使用以下方法进行设值操作，MutableStyleGen 将会使用 mutable.Map 来记录 CellStyle 处理链的缓存。
 ```scala
 val gen = CPoiUtils.newMutableStyleGen
-CPoiUtils.multiplySet(gen, cells): Try[CPoiDone]
+CPoi.multiplySet(gen, cells): Try[CPoiDone]
 ```
 第一句定义的 gen 可以重复使用在同一个 Workbook 的设值操作中以充分利用 CellStyle 缓存。
 
