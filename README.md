@@ -30,7 +30,7 @@ val cell3 = row.getCell(6) //null
 val result3: Either[CellReaderException, String] = CPoi.wrapCell(cell3).tryValue[Option[Double]] //Right(None)
 ```
 
-CPoiUtils.wrapCell 的使用方法如下：
+CPoi.wrapCell 的使用方法如下：
 ```scala
 CPoi.wrapCell(cell)
 CPoi.wrapCell(null: Cell)
@@ -120,16 +120,16 @@ val cells = List(
 
 然后使用以下代码产生副作用写入至 Workbook 即可：
 ```scala
-val gen = CPoiUtils.newStyleGen
+val gen = CPoi.newStyleGen
 CPoi.multiplySet(gen, cells): Try[StyleGen]
 ```
-CPoiUtils.multiplySet 的返回值是一个新的 StyleGen，拥有设值过程中产生的 CellStyle 缓存，如果在一组设值操作中有多段设值代码，
+CPoi.multiplySet 的返回值是一个新的 StyleGen，拥有设值过程中产生的 CellStyle 缓存，如果在一组设值操作中有多段设值代码，
 为了充分使用上一个设值操作的 CellStyle 缓存，可以继续使用
-CPoiUtils.multiplySet 的返回值作为下一个 CPoiUtils.multiplySet 的 gen 参数。
+CPoi.multiplySet 的返回值作为下一个 CPoi.multiplySet 的 gen 参数。
 
 在性能敏感的场合，可以使用以下方法进行设值操作，MutableStyleGen 将会使用 mutable.Map 来记录 CellStyle 处理链的缓存。
 ```scala
-val gen = CPoiUtils.newMutableStyleGen
+val gen = CPoi.newMutableStyleGen
 CPoi.multiplySet(gen, cells): Try[CPoiDone]
 ```
 第一句定义的 gen 可以重复使用在同一个 Workbook 的设值操作中以充分利用 CellStyle 缓存。
