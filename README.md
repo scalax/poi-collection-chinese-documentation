@@ -5,7 +5,7 @@ Excel 部分 API 的一个轻量级封装，仅提供一些基础的 Scala 风�
 
 ## 关注点
 
-poi-collection 主要为了解决以下两个问题：
+poi-collection 主要解决了以下两个问题：
 * 类型友好的 Type Class 风格读写器。
 * Scala 友好的 CellStyle 数量控制方案。
 
